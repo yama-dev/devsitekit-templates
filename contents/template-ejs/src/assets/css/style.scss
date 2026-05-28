@@ -1,0 +1,15 @@
+$bg: #fcf8f3;
+$fg: #111827;
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: $bg;
+  color: $fg;
+}
+
+.page,
+.page-header,
+.page-footer {
+  padding: 24px;
+}

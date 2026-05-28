@@ -1,0 +1,32 @@
+{
+  "name": "template-ejs",
+  "private": true,
+  "browserslist": {
+    "development": [
+      "Chrome >= 90",
+      "Edge >= 90",
+      "Firefox ESR",
+      "Safari >= 13",
+      "iOS >= 13",
+      "not IE 11"
+    ],
+    "production": [
+      "Chrome >= 90",
+      "Edge >= 90",
+      "Firefox ESR",
+      "Safari >= 13",
+      "iOS >= 13",
+      "not IE 11"
+    ]
+  },
+  "devDependencies": {
+    "[[devPackageName]]": "[[devPackageVersion]]"
+  },
+  "scripts": {
+    "serve": "devsitekit serve",
+    "build": "devsitekit build",
+    "preview": "devsitekit preview",
+    "clean": "devsitekit clean",
+    "doctor": "devsitekit doctor --project"
+  }
+}
