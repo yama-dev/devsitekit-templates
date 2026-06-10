@@ -1,9 +1,9 @@
 {
-  "version": "0.1.0",
-  "description": "0.1.0",
-  "releasedAt": "2026-05-28T14:30:19Z",
+  "version": "0.2.0",
+  "description": "Template release 0.2.0",
+  "releasedAt": "2026-06-10T14:40:29Z",
   "packageName": "@yama-dev/devsitekit",
-  "packageVersion": "0.1.0",
+  "packageVersion": "0.2.0",
   "source": "github-sync",
   "sourceRepo": "yama-dev/devsitekit",
   "templates": [
