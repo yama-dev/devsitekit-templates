@@ -1,0 +1,114 @@
+name: Publish Template Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Template version to release, with or without the v prefix'
+        required: true
+        type: string
+      draft:
+        description: 'Create or update the release as a draft'
+        required: false
+        default: false
+        type: boolean
+      prerelease:
+        description: 'Mark the release as a prerelease'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  publish-template-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout template repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve release metadata
+        id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            TAG_NAME="${GITHUB_REF_NAME}"
+            VERSION="${TAG_NAME#v}"
+            DRAFT="false"
+            PRERELEASE="false"
+          else
+            VERSION="${{ github.event.inputs.version }}"
+            VERSION="${VERSION#v}"
+            TAG_NAME="v${VERSION}"
+            DRAFT="${{ github.event.inputs.draft }}"
+            PRERELEASE="${{ github.event.inputs.prerelease }}"
+          fi
+
+          if [[ -z "${VERSION}" ]]; then
+            echo "version is required" >&2
+            exit 1
+          fi
+
+          echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "tag_name=${TAG_NAME}" >> "${GITHUB_OUTPUT}"
+          echo "asset_name=devsitekit-templates-v${VERSION}.zip" >> "${GITHUB_OUTPUT}"
+          echo "release_title=devsitekit templates v${VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "draft=${DRAFT}" >> "${GITHUB_OUTPUT}"
+          echo "prerelease=${PRERELEASE}" >> "${GITHUB_OUTPUT}"
+
+      - name: Validate template payload
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -d contents/template-default
+          test -d contents/template-ejs
+          test -f contents/meta.json
+
+      - name: Create release archive
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p .artifacts
+          (cd contents && zip -r "../.artifacts/${{ steps.meta.outputs.asset_name }}" template-default template-ejs meta.json)
+          unzip -l ".artifacts/${{ steps.meta.outputs.asset_name }}"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ steps.meta.outputs.tag_name }}
+          ASSET_NAME: ${{ steps.meta.outputs.asset_name }}
+          RELEASE_TITLE: ${{ steps.meta.outputs.release_title }}
+          VERSION: ${{ steps.meta.outputs.version }}
+          DRAFT: ${{ steps.meta.outputs.draft }}
+          PRERELEASE: ${{ steps.meta.outputs.prerelease }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          RELEASE_FLAGS=()
+          if [[ "${DRAFT}" == "true" ]]; then
+            RELEASE_FLAGS+=(--draft)
+          fi
+          if [[ "${PRERELEASE}" == "true" ]]; then
+            RELEASE_FLAGS+=(--prerelease)
+          fi
+
+          if gh release view "${TAG_NAME}" >/dev/null 2>&1; then
+            gh release upload "${TAG_NAME}" ".artifacts/${ASSET_NAME}" --clobber
+          else
+            gh release create "${TAG_NAME}" \
+              ".artifacts/${ASSET_NAME}" \
+              --title "${RELEASE_TITLE}" \
+              --notes "Template release ${VERSION}" \
+              "${RELEASE_FLAGS[@]}"
+          fi
