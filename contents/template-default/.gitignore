@@ -1,0 +1,19 @@
+# config
+.DS_Store
+dist/
+
+# design data.
+*.psd
+*.ai
+
+# node.js
+node_modules/
+# package-lock.json
+
+# Development environment.
+*.map
+
+# backup,temp files.
+_v*/
+_src*/
+_data*/

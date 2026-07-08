@@ -8,8 +8,20 @@ body {
   color: $fg;
 }
 
-.page,
-.page-header,
-.page-footer {
-  padding: 24px;
+a {
+  color: inherit;
+}
+
+.l-header,
+.l-footer,
+.l-section {
+  padding: 48px 24px;
+}
+
+.p-snslist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0;
+  list-style: none;
 }

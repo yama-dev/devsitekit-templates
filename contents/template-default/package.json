@@ -1,6 +1,20 @@
 {
-  "name": "template-default",
+  "name": "@yama-dev/devsitekit-project",
+  "version": "[[devsitekitVersion]]",
   "private": true,
+  "scripts": {
+    "serve": "devsitekit serve",
+    "build": "devsitekit build",
+    "preview": "devsitekit preview",
+    "clean": "devsitekit clean",
+    "doctor": "devsitekit doctor --project"
+  },
+  "volta": {
+    "node": "24.13.0"
+  },
+  "engines": {
+    "node": ">=24"
+  },
   "browserslist": {
     "development": [
       "Chrome >= 90",
@@ -21,12 +35,5 @@
   },
   "devDependencies": {
     "[[devPackageName]]": "[[devPackageVersion]]"
-  },
-  "scripts": {
-    "serve": "devsitekit serve",
-    "build": "devsitekit build",
-    "preview": "devsitekit preview",
-    "clean": "devsitekit clean",
-    "doctor": "devsitekit doctor --project"
   }
 }

@@ -2,7 +2,11 @@
 export default {
   html: {
     data: {
-      siteName: 'Template EJS'
+      siteName: 'Template EJS',
+      siteDescription: '',
+      siteUrl: '',
+      ogImage: '',
+      twitterSite: ''
     }
   },
   placeholders: {
